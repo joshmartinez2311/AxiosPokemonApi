@@ -1,25 +1,33 @@
-import logo from './logo.svg';
+// required imports from other components
+import axios from 'axios';
+import React, {useState} from 'react';
+import PokemonList from './components/PokemonList';
+import Button from './components/Button';
 import './App.css';
 
-function App() {
+const App = () => {
+  // useState to set variables for pokemon and api pokemon list
+  const [pokemon , setPokemon] = useState([]);
+  const [listLoaded, setListLoaded] = useState(false);
+  
+  // function to fetch api list using axios.get 
+  const fetchList = () => {
+    axios.get("https://pokeapi.co/api/v2/pokemon?limit=807")
+    .then((response) => {
+    setPokemon(response.data.results)
+    // sets the list to true so it can be render
+    setListLoaded(true);
+  });
+}
   return (
-    <div className="App">
-      <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
-        <p>
-          Edit <code>src/App.js</code> and save to reload.
-        </p>
-        <a
-          className="App-link"
-          href="https://reactjs.org"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Learn React
-        </a>
-      </header>
+    <div className='App container justify-items-center'>
+      <h1>All Pokemon</h1>
+        <div className='col-3'>
+          <Button onClick={fetchList}/>
+          {listLoaded && <PokemonList pokemon={pokemon}/>}
+        </div>
     </div>
   );
-}
+};
 
 export default App;
